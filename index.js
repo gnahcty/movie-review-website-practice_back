@@ -6,6 +6,7 @@ import mongoSanitize from 'express-mongo-sanitize'
 import rateLimit from 'express-rate-limit'
 import cors from 'cors'
 import usersRoute from './routes/usersRoute.js'
+import filmsRoute from './routes/filmsRoute.js'
 import './passport/passport.js'
 
 const app = express()
@@ -53,6 +54,7 @@ app.use((_, req, res, next) => {
 app.use(mongoSanitize())
 
 app.use('/users', usersRoute)
+app.use('/films', filmsRoute)
 
 app.all('*', (_, res) => {
   res.status(StatusCodes.NOT_FOUND).json({

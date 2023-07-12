@@ -21,6 +21,7 @@
     "express-rate-limit": "^6.7.0",
     "http-status-codes": "^2.2.0",
     "mongoose": "^7.3.1",
+    "moviedb": "^0.2.12",
     "multer": "^1.4.5-lts.1",
     "multer-storage-cloudinary": "^4.0.0",
     "passport": "^0.6.0",
