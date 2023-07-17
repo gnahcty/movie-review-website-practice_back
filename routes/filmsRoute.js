@@ -1,7 +1,8 @@
 import express from 'express'
-import { searchMovie, getFilms } from '../controllers/film.js'
+import { searchMovie, getFilms, searchCrew } from '../controllers/film.js'
 const router = express.Router()
-router.get('/search/:title', searchMovie)
-router.get('/films', getFilms)
+router.get('/:id', searchMovie)
+router.get('/:id/crew', searchCrew)
+router.get('/allFilms', getFilms)
 
 export default router
