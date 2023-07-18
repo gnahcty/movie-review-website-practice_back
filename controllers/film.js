@@ -5,12 +5,13 @@ const mdb = new MovieDb(process.env.TMDB_API_KEY)
 
 export const getFilms = async (req, res) => {
   try {
+    console.log(req.query)
     const params = {
       page: 1,
-      region: req.params.region,
-      with_genres: '',
-      year: req.params.year,
-      'vote_average.gte': 0
+      region: req.query.region,
+      // with_genres: '',
+      'vote_average.gte': req.query.rating,
+      year: req.query.year
     }
     const results = await mdb.discoverMovie(params)
     res.status(StatusCodes.OK).json({
@@ -19,8 +20,19 @@ export const getFilms = async (req, res) => {
       results
     })
   } catch (error) {
-    console.log(error.message)
-    res.status(500).json({ message: error.message })
+    console.log(error)
+    res.status(500).json({
+      success: false,
+      message: error.message
+    })
+  }
+}
+
+export const inFlmRoute = (req, res) => {
+  try {
+    console.log('inFlmRoute')
+  } catch (error) {
+    console.log(error)
   }
 }
 
