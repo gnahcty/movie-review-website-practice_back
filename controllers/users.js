@@ -38,7 +38,7 @@ export const login = async (req, res) => {
     res.status(StatusCodes.OK).json({
       success: true,
       message: '',
-      // TODO: 更新回傳資料
+      // : 更新回傳資料
       result: {
         token,
         username: req.user.username,

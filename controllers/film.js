@@ -7,9 +7,9 @@ export const getFilms = async (req, res) => {
   try {
     console.log(req.query)
     const params = {
-      page: 1,
+      page: req.query.page || 1,
       region: req.query.region,
-      // with_genres: '',
+      with_genres: req.query.genres,
       'vote_average.gte': req.query.rating,
       year: req.query.year
     }
@@ -38,6 +38,22 @@ export const inFlmRoute = (req, res) => {
 
 export const searchMovie = async (req, res) => {
   try {
+    console.log('searchMovie')
+    const results = await mdb.searchMovie(req.params.title)
+    res.status(StatusCodes.OK).json({
+      success: true,
+      message: '',
+      results
+    })
+  } catch (error) {
+    console.log(error.message)
+    res.status(500).json({ message: error.message })
+  }
+}
+
+export const getMovieDetails = async (req, res) => {
+  try {
+    console.log('嘿嘿我又來啦')
     const results = await mdb.movieInfo({ id: req.params.id })
     res.status(StatusCodes.OK).json({
       success: true,
