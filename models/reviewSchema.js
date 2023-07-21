@@ -23,6 +23,10 @@ const reviewSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Film is required']
   },
+  watched: {
+    type: Boolean,
+    default: false
+  },
   date: {
     type: Date,
     default: Date.now

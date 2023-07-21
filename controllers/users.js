@@ -30,6 +30,7 @@ export const createUser = async (req, res) => {
   }
 }
 
+// TODO: user avatar
 export const login = async (req, res) => {
   try {
     const token = jwt.sign({ _id: req.user._id }, process.env.JWT_SECRET, { expiresIn: '7 days' })
@@ -38,13 +39,14 @@ export const login = async (req, res) => {
     res.status(StatusCodes.OK).json({
       success: true,
       message: '',
-      // : 更新回傳資料
       result: {
         token,
         username: req.user.username,
         email: req.user.email,
-        admin: req.user.admin
-        // cart: req.user.cart.reduce((total, current) => total + current.quantity, 0)
+        admin: req.user.admin,
+        following: req.user.following,
+        followers: req.user.followers,
+        watchList: req.user.watchList
       }
     })
   } catch (error) {
@@ -90,7 +92,7 @@ export const extend = async (req, res) => {
   }
 }
 
-// TODO: 更新回傳資料
+// TODO: user avatar
 export const getProfile = (req, res) => {
   try {
     res.status(StatusCodes.OK).json({
@@ -99,7 +101,10 @@ export const getProfile = (req, res) => {
       result: {
         username: req.user.username,
         email: req.user.email,
-        admin: req.user.admin
+        admin: req.user.admin,
+        following: req.user.following,
+        followers: req.user.followers,
+        watchList: req.user.watchList
       }
     })
   } catch (error) {
