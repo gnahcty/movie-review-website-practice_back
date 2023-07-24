@@ -5,23 +5,16 @@ const likeSchema = new mongoose.Schema({
     type: mongoose.ObjectId,
     ref: 'userSchema',
     required: [true, 'User is required']
-  },
-  date: {
-    type: Date,
-    default: Date.now
   }
-}, { versionKey: false })
+}, { versionKey: false, timestamps: true })
 
 const filmSchema = new mongoose.Schema({
   filmId: {
     type: String,
     required: [true, 'Film Id is required']
   },
-  date: {
-    type: Date,
-    default: Date.now
-  }
-}, { versionKey: false })
+  unique: true
+}, { versionKey: false, timestamps: true })
 
 const listSchema = new mongoose.Schema({
   name: {
@@ -37,14 +30,10 @@ const listSchema = new mongoose.Schema({
     type: [filmSchema],
     default: []
   },
-  date: {
-    type: Date,
-    default: Date.now
-  },
   likes: {
     type: [likeSchema],
     default: []
   }
-}, { versionKey: false })
+}, { versionKey: false, timestamps: true })
 
 export default mongoose.model('lists', listSchema)

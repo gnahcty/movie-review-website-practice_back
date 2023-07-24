@@ -5,7 +5,7 @@ const mdb = new MovieDb(process.env.TMDB_API_KEY)
 
 export const getFilms = async (req, res) => {
   try {
-    console.log(req.query)
+    // console.log(req.query)
     const params = {
       page: req.query.page || 1,
       region: req.query.region,
@@ -38,7 +38,7 @@ export const inFlmRoute = (req, res) => {
 
 export const searchMovie = async (req, res) => {
   try {
-    console.log('searchMovie')
+    // console.log('searchMovie')
     const results = await mdb.searchMovie(req.params.title)
     res.status(StatusCodes.OK).json({
       success: true,
@@ -53,7 +53,7 @@ export const searchMovie = async (req, res) => {
 
 export const getMovieDetails = async (req, res) => {
   try {
-    console.log('嘿嘿我又來啦')
+    console.log(' getMovieDetails')
     const results = await mdb.movieInfo({ id: req.params.id })
     res.status(StatusCodes.OK).json({
       success: true,

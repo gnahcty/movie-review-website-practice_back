@@ -1,23 +1,10 @@
 import mongoose from 'mongoose'
 
-const cmtSchema = new mongoose.Schema({
-  content: {
-    type: String,
-    default: ''
-  },
-  // FIXME: 把UID ref到users
-  likes: {
-    type: [mongoose.ObjectId],
-    ref: 'users',
-    default: []
-  }
-}, { versionKey: false })
-
 const reviewSchema = new mongoose.Schema({
   user: {
     type: mongoose.ObjectId,
     ref: 'users',
-    required: [true, 'List Creator is required']
+    required: [true, 'Reviewer is required']
   },
   film: {
     type: String,
@@ -26,10 +13,6 @@ const reviewSchema = new mongoose.Schema({
   watched: {
     type: Boolean,
     default: false
-  },
-  date: {
-    type: Date,
-    default: Date.now
   },
   ratings: {
     type: Number,
@@ -42,13 +25,17 @@ const reviewSchema = new mongoose.Schema({
     default: false
   },
   comments: {
-    type: [cmtSchema],
-    default: []
+    type: String,
+    default: ''
   },
+  cmtLikes: [{
+    type: mongoose.ObjectId,
+    ref: 'users'
+  }],
   reported: {
     type: Number,
     default: 0
   }
-})
+}, { versionKey: false, timestamps: true })
 
 export default mongoose.model('reviews', reviewSchema)
