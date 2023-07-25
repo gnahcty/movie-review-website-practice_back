@@ -4,8 +4,31 @@ import { StatusCodes } from 'http-status-codes'
 
 export const getUserReview = async (req, res) => {
   try {
+    const films = req.body
+    for (const film of films) {
+      const result = await reviews.findOne({ user: req.user._id, film: film.id })
+      film.watched = result?.watched || false
+      film.ratings = result?.ratings || 0
+      film.like = result?.like || false
+      film.comments = result?.comments || ''
+    }
+    res.status(StatusCodes.OK).json({
+      success: true,
+      message: '',
+      films
+    })
+  } catch (error) {
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      success: false,
+      message: 'Something went wrong when getting review'
+    })
+    console.log(error)
+  }
+}
+
+export const getReviewDetails = async (req, res) => {
+  try {
     const result = await reviews.findOne({ user: req.user._id, film: req.params.filmID })
-    console.log(result)
     res.status(StatusCodes.OK).json({
       success: true,
       message: '',
@@ -14,7 +37,7 @@ export const getUserReview = async (req, res) => {
   } catch (error) {
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
       success: false,
-      message: 'Something went wrong when getting review'
+      message: 'Something went wrong'
     })
   }
 }
