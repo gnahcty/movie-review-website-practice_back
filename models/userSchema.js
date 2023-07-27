@@ -52,6 +52,10 @@ const UserSchema = new mongoose.Schema({
     type: Number,
     default: false
   },
+  avatar: {
+    type: String,
+    default: 'https://source.boringavatars.com/beam/120/Annie%20Jump?colors=264653,2a9d8f,e9c46a,f4a261,e76f51'
+  },
   following: {
     type: [followerSchema],
     default: []

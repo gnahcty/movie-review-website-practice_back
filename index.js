@@ -3,7 +3,7 @@ import express from 'express'
 import mongoose from 'mongoose'
 import { StatusCodes } from 'http-status-codes'
 import mongoSanitize from 'express-mongo-sanitize'
-import rateLimit from 'express-rate-limit'
+// import rateLimit from 'express-rate-limit'
 import cors from 'cors'
 import usersRoute from './routes/usersRoute.js'
 import filmsRoute from './routes/filmsRoute.js'
@@ -12,20 +12,20 @@ import './passport/passport.js'
 
 const app = express()
 
-app.use(rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 100,
-  standardHeaders: true,
-  legacyHeaders: false,
-  statusCode: StatusCodes.TOO_MANY_REQUESTS,
-  message: 'Too many requests from this IP, please try again in an hour',
-  handler (req, res, next, options) {
-    res.status(options.statusCode).json({
-      success: false,
-      message: options.message
-    })
-  }
-}))
+// app.use(rateLimit({
+//   windowMs: 15 * 60 * 1000,
+//   max: 100,
+//   standardHeaders: true,
+//   legacyHeaders: false,
+//   statusCode: StatusCodes.TOO_MANY_REQUESTS,
+//   message: 'Too many requests from this IP, please try again in an hour',
+//   handler (req, res, next, options) {
+//     res.status(options.statusCode).json({
+//       success: false,
+//       message: options.message
+//     })
+//   }
+// }))
 
 app.use(cors({
   origin (origin, callback) {

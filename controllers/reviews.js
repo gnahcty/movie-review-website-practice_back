@@ -2,6 +2,24 @@ import reviews from '../models/reviewSchema.js'
 // import { getMessageFromValidationError } from '../utils/error.js'
 import { StatusCodes } from 'http-status-codes'
 
+export const getReviews = async (req, res) => {
+  try {
+    const results = await reviews.find({ film: req.params.filmID }).populate('user', 'username avatar').exec()
+    res.status(StatusCodes.OK).json({
+      success: true,
+      message: '',
+      results
+    })
+  } catch (error) {
+    console.log(error)
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      success: false,
+      message: 'An error occurred while fetching reviews.',
+      error: error.message
+    })
+  }
+}
+
 export const getUserReview = async (req, res) => {
   try {
     const films = req.body
@@ -121,3 +139,34 @@ const createReview = async (userID, filmID, ratings, like, comments, watched, re
     throw new Error('Error creating new review: ' + error.message)
   }
 }
+
+export const likeCmt = async (req, res) => {
+  try {
+    const cmt = await reviews.findOne({ _id: req.body.cmtID })
+    const idx = cmt.cmtLikes.indexOf(req.body.userID)
+    if (idx > 0) {
+      cmt.cmtLikes.splice(idx, 1)
+    } else {
+      cmt.cmtLikes.push({ _id: req.body.userID })
+    }
+    res.status(StatusCodes.OK).json({
+      success: true,
+      message: '',
+      cmt
+    })
+  } catch (error) {
+    console.log(error)
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      success: false,
+      message: 'Something went wrong'
+    })
+  }
+}
+
+// export const getLikes async (req, res) => {
+//   try {
+//     const cmt = await reviews.findOne({ _id: req.body.cmtID })
+//   } catch (error) {
+
+//   }
+// }

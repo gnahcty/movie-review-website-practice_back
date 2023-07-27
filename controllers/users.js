@@ -30,7 +30,21 @@ export const createUser = async (req, res) => {
   }
 }
 
-// TODO: user avatar
+export const updateAvatar = (req, res) => {
+  try {
+    req.user.avatar = `https://source.boringavatars.com/beam/120/${req.user.username}?colors=264653,2a9d8f,e9c46a,f4a261,e76f51`
+    res.status(StatusCodes.OK).json({
+      success: true,
+      message: ''
+    })
+  } catch (error) {
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      success: false,
+      message: 'error updating avatar'
+    })
+  }
+}
+
 export const login = async (req, res) => {
   try {
     const token = jwt.sign({ _id: req.user._id }, process.env.JWT_SECRET, { expiresIn: '7 days' })
@@ -43,6 +57,7 @@ export const login = async (req, res) => {
         token,
         username: req.user.username,
         email: req.user.email,
+        avatar: req.user.avatar,
         admin: req.user.admin,
         following: req.user.following,
         followers: req.user.followers,
@@ -92,7 +107,6 @@ export const extend = async (req, res) => {
   }
 }
 
-// TODO: user avatar
 export const getProfile = (req, res) => {
   try {
     res.status(StatusCodes.OK).json({
@@ -102,6 +116,7 @@ export const getProfile = (req, res) => {
         username: req.user.username,
         email: req.user.email,
         admin: req.user.admin,
+        avatar: req.user.avatar,
         following: req.user.following,
         followers: req.user.followers,
         watchList: req.user.watchList
@@ -118,7 +133,6 @@ export const getProfile = (req, res) => {
 export const addToList = async (req, res) => {
   try {
     const idx = req.user.watchList.indexOf(req.body.filmID)
-    console.log(idx)
     if (idx > -1) {
       req.user.watchList.splice(idx, 1)
     } else {
