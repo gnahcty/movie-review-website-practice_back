@@ -14,12 +14,6 @@ const followerSchema = new mongoose.Schema({
   }
 }, { versionKey: false })
 
-// const watchListSchema = new mongoose.Schema({
-//   filmID: {
-//     type: String
-//   }
-// }, { versionKey: false, timestamps: true })
-
 const UserSchema = new mongoose.Schema({
   username: {
     type: String,

@@ -7,6 +7,6 @@ router.post('/', auth.jwt, update)
 router.post('/like', auth.jwt, likeCmt)
 router.post('/user', auth.jwt, getUserReview)
 router.get('/user/:filmID', auth.jwt, getReviewDetails)
-router.get('/:filmID', auth.jwt, getReviews)
+router.get('/:filmID', getReviews)
 
 export default router

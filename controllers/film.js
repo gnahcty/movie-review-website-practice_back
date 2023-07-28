@@ -53,7 +53,7 @@ export const searchMovie = async (req, res) => {
 
 export const getMovieDetails = async (req, res) => {
   try {
-    console.log(' getMovieDetails')
+    // console.log(' getMovieDetails')
     const results = await mdb.movieInfo({ id: req.params.id })
     res.status(StatusCodes.OK).json({
       success: true,

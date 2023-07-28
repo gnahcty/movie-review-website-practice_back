@@ -2,6 +2,7 @@ import reviews from '../models/reviewSchema.js'
 // import { getMessageFromValidationError } from '../utils/error.js'
 import { StatusCodes } from 'http-status-codes'
 
+// 找特定電影的所有評論
 export const getReviews = async (req, res) => {
   try {
     const results = await reviews.find({ film: req.params.filmID }).populate('user', 'username avatar').exec()
@@ -20,6 +21,7 @@ export const getReviews = async (req, res) => {
   }
 }
 
+// 找特定用戶對一串電影的評論
 export const getUserReview = async (req, res) => {
   try {
     const films = req.body
@@ -44,6 +46,7 @@ export const getUserReview = async (req, res) => {
   }
 }
 
+// 找特定用戶對特定電影的評論
 export const getReviewDetails = async (req, res) => {
   try {
     const result = await reviews.findOne({ user: req.user._id, film: req.params.filmID })
@@ -143,12 +146,15 @@ const createReview = async (userID, filmID, ratings, like, comments, watched, re
 export const likeCmt = async (req, res) => {
   try {
     const cmt = await reviews.findOne({ _id: req.body.cmtID })
-    const idx = cmt.cmtLikes.indexOf(req.body.userID)
-    if (idx > 0) {
+    const idx = cmt.cmtLikes.indexOf(req.user._id)
+    if (idx > -1) {
       cmt.cmtLikes.splice(idx, 1)
     } else {
-      cmt.cmtLikes.push({ _id: req.body.userID })
+      cmt.cmtLikes.push(req.user._id)
     }
+
+    await cmt.save()
+
     res.status(StatusCodes.OK).json({
       success: true,
       message: '',
@@ -162,11 +168,3 @@ export const likeCmt = async (req, res) => {
     })
   }
 }
-
-// export const getLikes async (req, res) => {
-//   try {
-//     const cmt = await reviews.findOne({ _id: req.body.cmtID })
-//   } catch (error) {
-
-//   }
-// }
