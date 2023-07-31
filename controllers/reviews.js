@@ -168,3 +168,29 @@ export const likeCmt = async (req, res) => {
     })
   }
 }
+
+export const del = async (req, res) => {
+  try {
+    const result = await reviews.findOne({ _id: req.body._id })
+    if (result) {
+      result.comments = ''
+      const hasDefaultData = result.ratings === 0 && result.like === false && result.comments.length === 0
+      if (hasDefaultData && result.watched === false) {
+        await reviews.deleteOne({ _id: result._id })
+      } else {
+        result.watched = true
+        await result.save()
+      }
+      res.status(StatusCodes.OK).json({
+        success: true,
+        message: '',
+        result
+      })
+    }
+  } catch (error) {
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      success: false,
+      message: 'Something went wrong'
+    })
+  }
+}
