@@ -10,7 +10,10 @@ const listSchema = new mongoose.Schema({
     ref: 'userSchema',
     required: [true, 'List Creator is required']
   },
-  film: [{
+  description: {
+    type: String
+  },
+  films: [{
     type: String,
     required: [true, 'Film Id is required']
   }],
