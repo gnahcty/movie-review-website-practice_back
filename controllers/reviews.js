@@ -128,7 +128,7 @@ const createReview = async (userID, filmID, ratings, like, comments, watched, re
     const newReview = await reviews.create({
       user: userID,
       film: filmID,
-      watched: watched ?? false,
+      watched: true,
       ratings: ratings || 0,
       like: like ?? false,
       comments: comments || '',
