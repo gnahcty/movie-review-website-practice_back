@@ -134,23 +134,36 @@ export const getProfile = (req, res) => {
 
 export const addToList = async (req, res) => {
   try {
-    const idx = req.user.watchList.indexOf(req.body.filmID)
+    const { filmID, title, poster } = req.body
+
+    // Find the index of the film model with the provided film ID in the watchList array
+    const idx = req.user.watchList.findIndex((film) => film.id === filmID)
+
     if (idx > -1) {
+      // Film model found, remove it from the watchList
       req.user.watchList.splice(idx, 1)
     } else {
-      req.user.watchList.push(req.body.filmID)
+      // Film model not found, add a new film model with the provided details
+      req.user.watchList.push({
+        id: filmID,
+        title,
+        poster
+      })
     }
+
+    // Save the updated user document
     await req.user.save()
+
     res.status(StatusCodes.OK).json({
       success: true,
       message: '',
-      result: req.user.watchList.length
+      result: req.user.watchList
     })
   } catch (error) {
     console.log(error)
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
       success: false,
-      message: 'error adding watchlist'
+      message: 'Error adding watchlist'
     })
   }
 }

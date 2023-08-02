@@ -59,9 +59,10 @@ export const updateList = async (req, res) => {
   try {
     const list = await lists.findOne({ _id: req.body._id }
     )
-    const idx = list.films.indexOf(req.body.film)
+    const { id, title, poster } = req.body.film
+    const idx = list.films.findIndex((film) => film.id === id)
     if (idx === -1) {
-      list.films.push(req.body.film)
+      list.films.push({ id, title, poster })
     } else {
       list.films.splice(idx, 1)
     }
