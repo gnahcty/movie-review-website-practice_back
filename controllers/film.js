@@ -81,6 +81,7 @@ export const getMovieDetails = async (req, res) => {
     res.status(500).json({ message: error.message })
   }
 }
+
 export const searchCrew = async (req, res) => {
   try {
     const results = await mdb.movieCredits({ id: req.params.id })
