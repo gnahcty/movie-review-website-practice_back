@@ -4,6 +4,7 @@ const router = express.Router()
 
 router.get('/trending', trending)
 router.get('/', inFlmRoute)
+router.get('/trending', trending)
 router.get('/allFilms', getFilms)
 router.get('/search/:title', searchMovie)
 router.get('/:id', getMovieDetails)
