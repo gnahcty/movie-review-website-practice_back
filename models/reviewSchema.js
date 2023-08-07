@@ -10,6 +10,18 @@ const reviewSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Film is required']
   },
+  poster: {
+    type: String,
+    default: ''
+  },
+  title: {
+    type: String,
+    default: ''
+  },
+  year: {
+    type: String,
+    default: ''
+  },
   watched: {
     type: Boolean,
     default: false

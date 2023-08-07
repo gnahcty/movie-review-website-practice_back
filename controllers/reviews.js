@@ -1,6 +1,47 @@
 import reviews from '../models/reviewSchema.js'
+import mongoose from 'mongoose'
+import { MovieDb } from 'moviedb-promise'
 // import { getMessageFromValidationError } from '../utils/error.js'
 import { StatusCodes } from 'http-status-codes'
+const mdb = new MovieDb(process.env.TMDB_API_KEY)
+// import moment from 'moment'
+
+export const popReviews = async (req, res) => {
+  try {
+    const lastMonth = new Date()
+    lastMonth.setMonth(lastMonth.getMonth() - 1)
+
+    const results = await reviews
+      .find({
+        createdAt: mongoose.trusted({ $gte: lastMonth }),
+        comments: mongoose.trusted({ $not: { $regex: /^\s*$/ } })
+      })
+      .populate('user', 'username avatar')
+      .sort({ cmtLikes: -1 })
+      .limit(60)
+      .exec()
+
+    for (const review of results) {
+      const details = await mdb.movieInfo({ id: review.film })
+      review.poster = details.poster_path
+      review.title = details.title
+      review.year = details.release_date.substring(0, 4)
+    }
+
+    res.status(StatusCodes.OK).json({
+      success: true,
+      message: '',
+      results
+    })
+  } catch (error) {
+    console.log(error)
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      success: false,
+      message: 'error fetching pop reviews',
+      error: error.message
+    })
+  }
+}
 
 // 找特定電影的所有評論
 export const getReviews = async (req, res) => {

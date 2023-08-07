@@ -1,9 +1,10 @@
 import express from 'express'
-import { del, update, likeCmt, getUserReview, getReviewDetails, getReviews } from '../controllers/reviews.js'
+import { popReviews, del, update, likeCmt, getUserReview, getReviewDetails, getReviews } from '../controllers/reviews.js'
 import * as auth from '../middlewares/auth.js'
 
 const router = express.Router()
 router.post('/', auth.jwt, update)
+router.get('/pop', popReviews)
 router.post('/delete', auth.jwt, del)
 router.post('/like', auth.jwt, likeCmt)
 router.post('/user', auth.jwt, getUserReview)
