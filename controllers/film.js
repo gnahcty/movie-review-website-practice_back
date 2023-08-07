@@ -3,6 +3,23 @@ import { MovieDb } from 'moviedb-promise'
 import { StatusCodes } from 'http-status-codes'
 const mdb = new MovieDb(process.env.TMDB_API_KEY)
 
+export const trending = async (req, res) => {
+  try {
+    const results = await mdb.trending({ media_type: 'movie', time_window: 'week' })
+    res.status(StatusCodes.OK).json({
+      success: true,
+      message: '',
+      results
+    })
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({
+      success: false,
+      message: error.message
+    })
+  }
+}
+
 export const getFilms = async (req, res) => {
   try {
     // console.log(req.query)
