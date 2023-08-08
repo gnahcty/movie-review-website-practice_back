@@ -21,13 +21,6 @@ export const popReviews = async (req, res) => {
       .limit(60)
       .exec()
 
-    for (const review of results) {
-      const details = await mdb.movieInfo({ id: review.film })
-      review.poster = details.poster_path
-      review.title = details.title
-      review.year = details.release_date.substring(0, 4)
-    }
-
     res.status(StatusCodes.OK).json({
       success: true,
       message: '',
@@ -166,6 +159,7 @@ const updateReview = async (existingReview, ratings, like, comments, watched) =>
 
 const createReview = async (userID, filmID, ratings, like, comments, watched, reported) => {
   try {
+    const details = await mdb.movieInfo({ id: filmID })
     const newReview = await reviews.create({
       user: userID,
       film: filmID,
@@ -173,7 +167,10 @@ const createReview = async (userID, filmID, ratings, like, comments, watched, re
       ratings: ratings || 0,
       like: like ?? false,
       comments: comments || '',
-      reported: 0
+      reported: 0,
+      poster: details.poster_path,
+      title: details.title,
+      year: details.release_date.substring(0, 4)
     })
     // Save the new document to the database
     await newReview.save()

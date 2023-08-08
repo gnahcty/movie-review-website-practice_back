@@ -76,6 +76,18 @@ const UserSchema = new mongoose.Schema({
   watchList: {
     type: [filmSchema],
     default: []
+  },
+  watched: {
+    type: String,
+    default: ''
+  },
+  reviewed: {
+    type: String,
+    default: ''
+  },
+  latestComments: {
+    type: Array,
+    default: []
   }
 }, { versionKey: false })
 

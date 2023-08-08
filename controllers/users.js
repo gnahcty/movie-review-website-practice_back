@@ -1,5 +1,7 @@
 import { StatusCodes } from 'http-status-codes'
+import mongoose from 'mongoose'
 import users from '../models/userSchema.js'
+import reviews from '../models/reviewSchema.js'
 import { getMessageFromValidationError } from '../utils/error.js'
 import jwt from 'jsonwebtoken'
 
@@ -164,6 +166,47 @@ export const addToList = async (req, res) => {
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
       success: false,
       message: 'Error adding watchlist'
+    })
+  }
+}
+
+export const popUser = async (req, res) => {
+  try {
+    const results = []
+    const popUsers = await users.find().sort({ followers: -1 }).limit(3)
+    for (const user of popUsers) {
+      const watched = await reviews.countDocuments({ user: user._id })
+      const reviewed = await reviews.countDocuments({
+        user: user._id,
+        comments: { $ne: '' }
+      })
+      const latestComments = await reviews.find({
+        user: user._id,
+        comments: mongoose.trusted({ $ne: '' })
+      })
+        .sort({ createdAt: -1 })
+        .limit(3)
+
+      results.push({
+        _id: user._id,
+        avatar: user.avatar,
+        username: user.username,
+        watched,
+        reviewed,
+        latestComments
+      })
+    }
+    res.status(StatusCodes.OK).json({
+      success: true,
+      message: '',
+      results
+    })
+  } catch (error) {
+    console.log(error)
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      success: false,
+      message: 'error fetching pop users',
+      error: error.message
     })
   }
 }
