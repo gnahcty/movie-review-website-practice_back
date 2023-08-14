@@ -1,5 +1,73 @@
 import lists from '../models/listSchema.js'
+import mongoose from 'mongoose'
 import { StatusCodes } from 'http-status-codes'
+
+export const getPopLists = async (req, res) => {
+  try {
+    const lastMonth = new Date()
+    lastMonth.setMonth(lastMonth.getMonth() - 1)
+
+    const results = await lists
+      .find({
+        createdAt: mongoose.trusted({ $gte: lastMonth })
+      })
+      .populate('user', 'username avatar')
+      .sort({ likes: -1 })
+      .limit(12)
+
+    res.status(StatusCodes.OK).json({
+      success: true,
+      message: '',
+      results
+    })
+  } catch (error) {
+    console.log(error)
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      success: false,
+      message: 'error fetching pop lists',
+      error: error.message
+    })
+  }
+}
+
+export const getNewLists = async (req, res) => {
+  try {
+    const results = await lists
+      .find({}).populate('user', 'username avatar')
+      .sort({ createdAt: -1 })
+      .limit(12)
+
+    res.status(StatusCodes.OK).json({
+      success: true,
+      message: '',
+      results
+    })
+  } catch (error) {
+    console.log(error)
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      success: false,
+      message: 'error fetching new lists',
+      error: error.message
+    })
+  }
+}
+
+export const getListDetails = async (req, res) => {
+  try {
+    const results = await lists.findOne({ _id: req.params.id }).populate('user', 'username avatar')
+
+    res.status(StatusCodes.OK).json({
+      success: true,
+      message: '',
+      results
+    })
+  } catch (error) {
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      success: false,
+      message: 'Error getting list'
+    })
+  }
+}
 
 export const getUserLists = async (req, res) => {
   try {

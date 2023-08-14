@@ -22,7 +22,7 @@ const listSchema = new mongoose.Schema({
   },
   user: {
     type: mongoose.ObjectId,
-    ref: 'userSchema',
+    ref: 'users',
     required: [true, 'List Creator is required']
   },
   description: {
