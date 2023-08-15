@@ -4,7 +4,6 @@ import { MovieDb } from 'moviedb-promise'
 // import { getMessageFromValidationError } from '../utils/error.js'
 import { StatusCodes } from 'http-status-codes'
 const mdb = new MovieDb(process.env.TMDB_API_KEY)
-// import moment from 'moment'
 
 export const popReviews = async (req, res) => {
   try {
