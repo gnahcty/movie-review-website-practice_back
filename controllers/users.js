@@ -51,6 +51,17 @@ export const login = async (req, res) => {
   try {
     const token = jwt.sign({ _id: req.user._id }, process.env.JWT_SECRET, { expiresIn: '7 days' })
     req.user.tokens.push(token)
+    req.user.watched = await reviews.countDocuments({ user: req.user._id })
+    req.user.reviewed = await reviews.countDocuments({
+      user: req.user._id,
+      comments: { $ne: '' }
+    })
+    req.user.latestComments = await reviews.find({
+      user: req.user._id,
+      comments: mongoose.trusted({ $ne: '' })
+    })
+      .sort({ createdAt: -1 })
+      .limit(3)
     await req.user.save()
     res.status(StatusCodes.OK).json({
       success: true,
@@ -64,7 +75,10 @@ export const login = async (req, res) => {
         admin: req.user.admin,
         following: req.user.following,
         followers: req.user.followers,
-        watchList: req.user.watchList
+        watchList: req.user.watchList,
+        watched: req.user.watched,
+        reviewed: req.user.reviewed,
+        latestComments: req.user.latestComments
       }
     })
   } catch (error) {

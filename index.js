@@ -9,6 +9,7 @@ import usersRoute from './routes/usersRoute.js'
 import filmsRoute from './routes/filmsRoute.js'
 import listsRoute from './routes/listsRoute.js'
 import reviewsRoute from './routes/reviewsRoute.js'
+import profileRoute from './routes/profileRoute.js'
 import './passport/passport.js'
 
 const app = express()
@@ -59,6 +60,7 @@ app.use('/users', usersRoute)
 app.use('/films', filmsRoute)
 app.use('/reviews', reviewsRoute)
 app.use('/lists', listsRoute)
+app.use('/profile', profileRoute)
 
 app.all('*', (_, res) => {
   res.status(StatusCodes.NOT_FOUND).json({

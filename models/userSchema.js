@@ -17,11 +17,13 @@ const followerSchema = new mongoose.Schema({
 const filmSchema = new mongoose.Schema({
   id: {
     type: String,
-    required: [true, 'film ID is required']
+    required: [true, 'film ID is required'],
+    unique: true
   },
   title: {
     type: String,
-    required: [true, 'title is required']
+    required: [true, 'title is required'],
+    unique: true
   },
   poster: {
     type: String,
