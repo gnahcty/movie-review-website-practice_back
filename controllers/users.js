@@ -32,9 +32,10 @@ export const createUser = async (req, res) => {
   }
 }
 
-export const updateAvatar = (req, res) => {
+export const updateAvatar = async (req, res) => {
   try {
     req.user.avatar = `https://source.boringavatars.com/beam/120/${req.user.username}?colors=264653,2a9d8f,e9c46a,f4a261,e76f51`
+    await req.user.save()
     res.status(StatusCodes.OK).json({
       success: true,
       message: ''
@@ -221,6 +222,41 @@ export const popUser = async (req, res) => {
       success: false,
       message: 'error fetching pop users',
       error: error.message
+    })
+  }
+}
+
+export const follow = async (req, res) => {
+  try {
+    const followee = await users.findOne({ username: req.body.username })
+    const idx = followee.followers.indexOf(req.user._id)
+    if (idx > -1) {
+      followee.followers.splice(idx, 1)
+    } else {
+      followee.followers.push(req.user._id)
+    }
+
+    await followee.save()
+
+    const i = req.user.following.indexOf(followee._id)
+    if (i > -1) {
+      req.user.following.splice(i, 1)
+    } else {
+      req.user.following.push(followee._id)
+    }
+
+    await req.user.save()
+
+    res.status(StatusCodes.OK).json({
+      success: true,
+      message: '',
+      followee
+    })
+  } catch (error) {
+    console.log(error)
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      success: false,
+      message: 'error following'
     })
   }
 }

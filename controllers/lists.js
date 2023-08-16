@@ -148,6 +148,33 @@ export const updateList = async (req, res) => {
   }
 }
 
+export const like = async (req, res) => {
+  try {
+    const list = await lists.findById(req.body.id)
+    const idx = list.likes.indexOf(req.user._id)
+    if (idx > -1) {
+      list.likes.splice(idx, 1)
+    } else {
+      list.likes.push(req.user._id)
+    }
+
+    await list.save()
+
+    res.status(StatusCodes.OK).json({
+      success: true,
+      message: '',
+      list
+    })
+  } catch (error) {
+    console.log(error)
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      success: false,
+      message: 'error liking list',
+      error
+    })
+  }
+}
+
 export const deleteList = async (req, res) => {
   try {
     const deleted = await lists.findOneAndRemove({ _id: req.body.id, user: req.user._id })

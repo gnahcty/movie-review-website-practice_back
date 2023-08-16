@@ -2,18 +2,6 @@ import mongoose from 'mongoose'
 import validator from 'validator'
 import bcrypt from 'bcrypt'
 
-const followerSchema = new mongoose.Schema({
-  user: {
-    type: mongoose.ObjectId,
-    ref: 'users',
-    required: [true, 'User is required']
-  },
-  date: {
-    type: Date,
-    default: Date.now
-  }
-}, { versionKey: false })
-
 const filmSchema = new mongoose.Schema({
   id: {
     type: String,
@@ -67,14 +55,14 @@ const UserSchema = new mongoose.Schema({
     type: String,
     default: 'https://source.boringavatars.com/beam/120/Annie%20Jump?colors=264653,2a9d8f,e9c46a,f4a261,e76f51'
   },
-  following: {
-    type: [followerSchema],
-    default: []
-  },
-  followers: {
-    type: [followerSchema],
-    default: []
-  },
+  following: [{
+    type: mongoose.ObjectId,
+    ref: 'users'
+  }],
+  followers: [{
+    type: mongoose.ObjectId,
+    ref: 'users'
+  }],
   watchList: {
     type: [filmSchema],
     default: []

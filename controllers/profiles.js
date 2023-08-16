@@ -45,3 +45,37 @@ export const getRecent = async (req, res) => {
     })
   }
 }
+
+export const getFavs = async (req, res) => {
+  try {
+    const user = await users.findOne({ username: req.params.username }).populate('following', 'username avatar')
+    console.log(user._id)
+    // cmt - liked films
+    const films = await reviews.find({ user: user._id, like: true }).sort({ createdAt: -1 }).limit(12)
+
+    // list - liked lists
+    const likedLists = await lists.find({ likes: user._id }).populate('user', 'username avatar').sort({ createdAt: -1 }).limit(12)
+    console.log(likedLists)
+
+    // cmt- liked cmts
+    const cmts = await reviews.find({ cmtLikes: user._id }).populate('user', 'username avatar')
+      .sort({ createdAt: -1 }).limit(12)
+
+    res.status(StatusCodes.OK).json({
+      success: true,
+      message: '',
+      result: {
+        films,
+        cmts,
+        likedLists
+      }
+    })
+  } catch (error) {
+    console.log(error)
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      success: false,
+      message: 'error getting user favorites',
+      error
+    })
+  }
+}
