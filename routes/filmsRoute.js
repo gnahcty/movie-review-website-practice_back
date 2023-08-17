@@ -1,9 +1,8 @@
 import express from 'express'
-import { searchMovie, getMovieDetails, getFilms, searchCrew, inFlmRoute, trending } from '../controllers/film.js'
+import { searchMovie, getMovieDetails, getFilms, searchCrew, trending } from '../controllers/film.js'
 const router = express.Router()
 
 router.get('/trending', trending)
-router.get('/', inFlmRoute)
 router.get('/trending', trending)
 router.get('/allFilms', getFilms)
 router.get('/search/:title', searchMovie)

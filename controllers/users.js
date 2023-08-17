@@ -152,15 +152,11 @@ export const getProfile = (req, res) => {
 export const addToList = async (req, res) => {
   try {
     const { filmID, title, poster } = req.body
-
-    // Find the index of the film model with the provided film ID in the watchList array
-    const idx = req.user.watchList.findIndex((film) => film.id === filmID)
+    const idx = req.user.watchList.findIndex((film) => film.id === filmID.toString())
 
     if (idx > -1) {
-      // Film model found, remove it from the watchList
       req.user.watchList.splice(idx, 1)
     } else {
-      // Film model not found, add a new film model with the provided details
       req.user.watchList.push({
         id: filmID,
         title,
@@ -187,34 +183,46 @@ export const addToList = async (req, res) => {
 
 export const popUser = async (req, res) => {
   try {
-    const results = []
-    const popUsers = await users.find().sort({ followers: -1 }).limit(3)
-    for (const user of popUsers) {
-      const watched = await reviews.countDocuments({ user: user._id })
+    const top3 = []
+    const top20 = []
+    const popUsers = await users.find().sort({ followers: -1 }).limit(20)
+    for (const i in popUsers) {
+      const watched = await reviews.countDocuments({ user: popUsers[i]._id })
       const reviewed = await reviews.countDocuments({
-        user: user._id,
+        user: popUsers[i]._id,
         comments: { $ne: '' }
       })
       const latestComments = await reviews.find({
-        user: user._id,
+        user: popUsers[i]._id,
         comments: mongoose.trusted({ $ne: '' })
       })
         .sort({ createdAt: -1 })
         .limit(3)
-
-      results.push({
-        _id: user._id,
-        avatar: user.avatar,
-        username: user.username,
-        watched,
-        reviewed,
-        latestComments
-      })
+      if (i < 3) {
+        top3.push({
+          _id: popUsers[i]._id,
+          avatar: popUsers[i].avatar,
+          username: popUsers[i].username,
+          watched,
+          reviewed,
+          latestComments
+        })
+      } else {
+        top20.push({
+          _id: popUsers[i]._id,
+          avatar: popUsers[i].avatar,
+          username: popUsers[i].username,
+          watched,
+          reviewed,
+          latestComments
+        })
+      }
     }
     res.status(StatusCodes.OK).json({
       success: true,
       message: '',
-      results
+      top3,
+      top20
     })
   } catch (error) {
     console.log(error)

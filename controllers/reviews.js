@@ -100,7 +100,6 @@ export const getFriendReview = async (req, res) => {
     const friendReviews = []
     for (const followers of req.user.following) {
       const review = await reviews.findOne({ film: req.params.filmID, user: followers }).populate('user', 'username avatar')
-      console.log(review)
       friendReviews.push(review)
     }
     res.status(StatusCodes.OK).json({

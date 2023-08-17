@@ -22,7 +22,6 @@ export const trending = async (req, res) => {
 
 export const getFilms = async (req, res) => {
   try {
-    // console.log(req.query)
     const params = {
       page: req.query.page || 1,
       region: req.query.region,
@@ -42,14 +41,6 @@ export const getFilms = async (req, res) => {
       success: false,
       message: error.message
     })
-  }
-}
-
-export const inFlmRoute = (req, res) => {
-  try {
-    console.log('inFlmRoute')
-  } catch (error) {
-    console.log(error)
   }
 }
 
