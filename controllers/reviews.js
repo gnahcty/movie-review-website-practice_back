@@ -228,7 +228,7 @@ export const likeCmt = async (req, res) => {
 export const del = async (req, res) => {
   try {
     const result = await reviews.findOne({ _id: req.body._id })
-    if (result) {
+    if (result && result.user === req.user._id) {
       result.comments = ''
       const hasDefaultData = result.ratings === 0 && result.like === false && result.comments.length === 0
       if (hasDefaultData && result.watched === false) {
@@ -247,6 +247,27 @@ export const del = async (req, res) => {
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
       success: false,
       message: 'Something went wrong'
+    })
+  }
+}
+
+export const report = async (req, res) => {
+  try {
+    const result = await reviews.findOne({ _id: req.body._id })
+    if (result) {
+      result.reported++
+      await result.save()
+      res.status(StatusCodes.OK).json({
+        success: true,
+        message: '',
+        result
+      })
+    }
+  } catch (error) {
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      success: false,
+      message: 'cannot report',
+      error
     })
   }
 }

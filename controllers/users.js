@@ -138,7 +138,10 @@ export const getProfile = (req, res) => {
         avatar: req.user.avatar,
         following: req.user.following,
         followers: req.user.followers,
-        watchList: req.user.watchList
+        watchList: req.user.watchList,
+        watched: req.user.watched,
+        reviewed: req.user.reviewed,
+        latestComments: req.user.latestComments
       }
     })
   } catch (error) {
@@ -212,6 +215,8 @@ export const popUser = async (req, res) => {
           _id: popUsers[i]._id,
           avatar: popUsers[i].avatar,
           username: popUsers[i].username,
+          followers: popUsers[i].followers,
+          following: popUsers[i].following,
           watched,
           reviewed,
           latestComments
