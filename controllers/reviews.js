@@ -95,6 +95,7 @@ export const getReviewDetails = async (req, res) => {
     })
   }
 }
+
 export const getFriendReview = async (req, res) => {
   try {
     const friendReviews = []
@@ -228,7 +229,7 @@ export const likeCmt = async (req, res) => {
 export const del = async (req, res) => {
   try {
     const result = await reviews.findOne({ _id: req.body._id })
-    if (result && result.user === req.user._id) {
+    if (result && result.user.toString() === req.user._id.toString()) {
       result.comments = ''
       const hasDefaultData = result.ratings === 0 && result.like === false && result.comments.length === 0
       if (hasDefaultData && result.watched === false) {
