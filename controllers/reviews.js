@@ -254,7 +254,7 @@ export const del = async (req, res) => {
 
 export const report = async (req, res) => {
   try {
-    const result = await reviews.findOne({ _id: req.body._id })
+    const result = await reviews.findOne({ _id: req.body.id })
     if (result) {
       result.reported++
       await result.save()
@@ -268,6 +268,23 @@ export const report = async (req, res) => {
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
       success: false,
       message: 'cannot report',
+      error
+    })
+  }
+}
+
+export const getReported = async (req, res) => {
+  try {
+    const result = await reviews.find({ reported: mongoose.trusted({ $gt: 0 }) }).populate('user', '_id username')
+    res.status(StatusCodes.OK).json({
+      success: true,
+      message: '',
+      result
+    })
+  } catch (error) {
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      success: false,
+      message: 'cannot get report',
       error
     })
   }
