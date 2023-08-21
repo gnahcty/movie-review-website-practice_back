@@ -1,4 +1,5 @@
 import reviews from '../models/reviewSchema.js'
+import deleted from '../models/deletedSchema.js'
 import mongoose from 'mongoose'
 import { MovieDb } from 'moviedb-promise'
 // import { getMessageFromValidationError } from '../utils/error.js'
@@ -229,7 +230,7 @@ export const likeCmt = async (req, res) => {
 export const del = async (req, res) => {
   try {
     const result = await reviews.findOne({ _id: req.body._id })
-    if (result && result.user.toString() === req.user._id.toString()) {
+    if (result && (result.user.toString() === req.user._id.toString())) {
       result.comments = ''
       const hasDefaultData = result.ratings === 0 && result.like === false && result.comments.length === 0
       if (hasDefaultData && result.watched === false) {
@@ -285,6 +286,63 @@ export const getReported = async (req, res) => {
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
       success: false,
       message: 'cannot get report',
+      error
+    })
+  }
+}
+
+export const getDeleted = async (req, res) => {
+  try {
+    const result = await deleted.find().populate('user', '_id username')
+    res.status(StatusCodes.OK).json({
+      success: true,
+      message: '',
+      result
+    })
+  } catch (error) {
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      success: false,
+      message: 'cannot get deleted',
+      error
+    })
+  }
+}
+
+export const adminDelete = async (req, res) => {
+  try {
+    const results = []
+    for (const cmt of req.body.cmts) {
+      const deletedCmt = await deleted.create({
+        user: cmt.user,
+        comment: cmt.content,
+        created: new Date(cmt.createdAt).toISOString(),
+        reports: cmt.reports
+      })
+      await deletedCmt.save()
+      results.push(deletedCmt)
+      const result = await reviews.findOne({ _id: cmt._id })
+      if (result) {
+        result.comments = ''
+        result.reported = 0
+        const hasDefaultData = result.ratings === 0 && result.like === false && result.comments.length === 0
+        if (hasDefaultData && result.watched === false) {
+          await reviews.deleteOne({ _id: result._id })
+        } else {
+          result.watched = true
+          await result.save()
+        }
+      }
+    }
+    res.status(StatusCodes.OK).json({
+      success: true,
+      message: '',
+      results
+    })
+  } catch (error) {
+    console.log(error)
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      success: false,
+      message: 'cannot delete',
       error
     })
   }
