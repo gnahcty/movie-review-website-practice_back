@@ -206,6 +206,8 @@ export const popUser = async (req, res) => {
           _id: popUsers[i]._id,
           avatar: popUsers[i].avatar,
           username: popUsers[i].username,
+          followers: popUsers[i].followers,
+          following: popUsers[i].following,
           watched,
           reviewed,
           latestComments
