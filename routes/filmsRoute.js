@@ -3,9 +3,8 @@ import { searchMovie, getMovieDetails, getFilms, searchCrew, trending } from '..
 const router = express.Router()
 
 router.get('/trending', trending)
-router.get('/trending', trending)
 router.get('/allFilms', getFilms)
-router.get('/search/:title', searchMovie)
+router.post('/search', searchMovie)
 router.get('/:id', getMovieDetails)
 router.get('/:id/crew', searchCrew)
 

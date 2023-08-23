@@ -46,8 +46,7 @@ export const getFilms = async (req, res) => {
 
 export const searchMovie = async (req, res) => {
   try {
-    // console.log('searchMovie')
-    const results = await mdb.searchMovie(req.params.title)
+    const results = await mdb.searchMovie({ query: req.body.title, page: req.body.page })
     res.status(StatusCodes.OK).json({
       success: true,
       message: '',
