@@ -13,7 +13,7 @@ export const popReviews = async (req, res) => {
 
     const results = await reviews
       .find({
-        createdAt: mongoose.trusted({ $gte: lastMonth }),
+        // createdAt: mongoose.trusted({ $gte: lastMonth }),
         comments: mongoose.trusted({ $not: { $regex: /^\s*$/ } })
       })
       .populate('user', 'username avatar')

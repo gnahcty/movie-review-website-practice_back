@@ -1,16 +1,17 @@
 import lists from '../models/listSchema.js'
-import mongoose from 'mongoose'
+// import mongoose from 'mongoose'
 import { StatusCodes } from 'http-status-codes'
 
 export const getPopLists = async (req, res) => {
   try {
-    const lastMonth = new Date()
-    lastMonth.setMonth(lastMonth.getMonth() - 1)
+    // const lastMonth = new Date()
+    // lastMonth.setMonth(lastMonth.getMonth() - 1)
 
     const results = await lists
-      .find({
-        createdAt: mongoose.trusted({ $gte: lastMonth })
-      })
+      // .find({
+      //   createdAt: mongoose.trusted({ $gte: lastMonth })
+      // })
+      .find()
       .populate('user', 'username avatar')
       .sort({ likes: -1 })
       .limit(12)
